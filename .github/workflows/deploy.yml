@@ -1,0 +1,74 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        cd Winterra_exercise_microservice
+        npm install
+    
+    - name: Run tests
+      run: |
+        cd Winterra_exercise_microservice
+        npm test
+    
+    - name: Build application
+      run: |
+        cd Winterra_exercise_microservice
+        npm run build
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        cd Winterra_exercise_microservice
+        npm install
+    
+    - name: Build application
+      run: |
+        cd Winterra_exercise_microservice
+        npm run build
+    
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /home/ubuntu/winterra-exercise-api
+          git pull origin main
+          cd Winterra_exercise_microservice
+          npm install --omit=dev
+          npm run build
+          pm2 restart ecosystem.config.js --env production
+          pm2 save 
