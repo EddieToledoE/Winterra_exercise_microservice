@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { Exercise, ExerciseCategory, MuscleGroup, ExerciseDifficulty } from '../../../domain/entities/exercise';
 
-export interface ExerciseDocument extends Exercise, Document {}
+export interface ExerciseDocument extends Omit<Exercise, "id">, Document {}
 
 const ExerciseSchema = new Schema<ExerciseDocument>({
   name: {

@@ -1,6 +1,5 @@
 import { Exercise, ExerciseCategory, MuscleGroup, ExerciseDifficulty } from '../entities/exercise';
 import { ExerciseRepository } from '../repositories/exercise-repository';
-import { Weight } from '../value-objects/weight';
 
 export class ExerciseService {
   constructor(private exerciseRepository: ExerciseRepository) {}
@@ -58,7 +57,7 @@ export class ExerciseService {
     experience: string;
   }): Promise<Exercise[]> {
     // Lógica para recomendar ejercicios basada en el perfil
-    const recommendedExercises: Exercise[] = [];
+  
     
     // Obtener ejercicios por nivel de dificultad
     const difficulty = this.mapFitnessLevelToDifficulty(userProfile.fitnessLevel);
@@ -74,7 +73,6 @@ export class ExerciseService {
 
   // Calcular progreso de un ejercicio específico
   async calculateExerciseProgress(
-    userId: string,
     exerciseId: string,
     sessions: any[] // Tipado simplificado por ahora
   ): Promise<{

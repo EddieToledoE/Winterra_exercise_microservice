@@ -76,7 +76,7 @@ export class ExerciseUseCases {
   async getRecommendedExercises(userProfile: UserProfileDto): Promise<ExerciseRecommendationDto[]> {
     const exercises = await this.exerciseService.getRecommendedExercises(userProfile);
     
-    return exercises.map((exercise, index) => ({
+    return exercises.map((exercise) => ({
       exercise: ExerciseMapper.toResponseDto(exercise),
       score: this.calculateRecommendationScore(exercise, userProfile),
       reason: this.getRecommendationReason(exercise, userProfile)
@@ -85,7 +85,6 @@ export class ExerciseUseCases {
 
   // Caso de uso: Calcular progreso de ejercicio
   async calculateExerciseProgress(
-    userId: string,
     exerciseId: string,
     sessions: any[]
   ): Promise<ExerciseProgressDto | null> {
@@ -94,7 +93,7 @@ export class ExerciseUseCases {
       return null;
     }
 
-    const progress = await this.exerciseService.calculateExerciseProgress(userId, exerciseId, sessions);
+    const progress = await this.exerciseService.calculateExerciseProgress(exerciseId, sessions);
     
     return {
       exerciseId,
