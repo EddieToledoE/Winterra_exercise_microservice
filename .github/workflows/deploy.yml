@@ -57,10 +57,15 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          echo "Deploying to EC2"
-          cd /home/ubuntu/winterra-exercise-api
+          echo "✅ Entrando al microservicio"
+          cd /home/ubuntu/winterra-exercise-api/Winterra_exercise_microservice
+          echo "✅ Haciendo git pull"
           git pull origin master
+          echo "✅ Instalando dependencias"
           npm ci --omit=dev
+          echo "✅ Compilando proyecto"
           npm run build
+          echo "✅ Reiniciando con PM2"
           pm2 restart ecosystem.config.js --env production
           pm2 save
+
