@@ -2,9 +2,9 @@ name: Deploy to AWS EC2
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master ]  # Usa solo master si es tu rama principal
   pull_request:
-    branches: [ main, master ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -18,27 +18,21 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: Winterra_exercise_microservice/package-lock.json
+        cache-dependency-path: package-lock.json
 
     - name: Install dependencies
-      run: |
-        cd Winterra_exercise_microservice
-        npm ci
+      run: npm ci
 
     - name: Run tests
-      run: |
-        cd Winterra_exercise_microservice
-        npm test
+      run: npm test
 
     - name: Build application
-      run: |
-        cd Winterra_exercise_microservice
-        npm run build
+      run: npm run build
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
 
     steps:
     - uses: actions/checkout@v3
@@ -48,17 +42,13 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: Winterra_exercise_microservice/package-lock.json
+        cache-dependency-path: package-lock.json
 
     - name: Install dependencies
-      run: |
-        cd Winterra_exercise_microservice
-        npm ci
+      run: npm ci
 
     - name: Build application
-      run: |
-        cd Winterra_exercise_microservice
-        npm run build
+      run: npm run build
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v0.1.5
@@ -68,8 +58,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd /home/ubuntu/winterra-exercise-api
-          git pull origin main
-          cd Winterra_exercise_microservice
+          git pull origin master
           npm ci --omit=dev
           npm run build
           pm2 restart ecosystem.config.js --env production
