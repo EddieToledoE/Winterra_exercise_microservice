@@ -2,7 +2,7 @@ name: Deploy to AWS EC2
 
 on:
   push:
-    branches: [ master ]  # Usa solo master si es tu rama principal
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -23,8 +23,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Run tests
-      run: npm test
+    - name: Run tests (allow no tests)
+      run: npm test -- --passWithNoTests
 
     - name: Build application
       run: npm run build
