@@ -62,7 +62,7 @@ jobs:
           echo "✅ Haciendo git pull"
           git pull origin master
           echo "✅ Instalando dependencias"
-          npm ci --omit=dev
+          npm ci 
           echo "✅ Compilando proyecto"
           npm run build
           echo "✅ Reiniciando con PM2"
