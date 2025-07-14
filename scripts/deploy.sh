@@ -17,7 +17,7 @@ git pull origin main
 
 # Instalar dependencias
 echo "📦 Instalando dependencias..."
-npm ci --only=production
+npm install --omit=dev
 
 # Compilar TypeScript
 echo "🔨 Compilando aplicación..."
