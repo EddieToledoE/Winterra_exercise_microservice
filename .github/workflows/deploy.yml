@@ -57,6 +57,7 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          echo "Deploying to EC2"
           cd /home/ubuntu/winterra-exercise-api
           git pull origin master
           npm ci --omit=dev
