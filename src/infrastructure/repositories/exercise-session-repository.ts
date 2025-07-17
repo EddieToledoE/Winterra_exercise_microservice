@@ -116,6 +116,37 @@ export class MongoExerciseSessionRepository implements ExerciseSessionRepository
     };
   }
 
+  async getWeeklyMuscleGroupSummary(userId: string, startDate: Date, endDate: Date): Promise<{
+    userId: string;
+    start: string;
+    end: string;
+    setsByMuscleGroup: Record<string, number>;
+  }> {
+    const sessions = await ExerciseSessionModel.find({
+      userId,
+      date: { $gte: startDate, $lte: endDate }
+    });
+
+    const setsByMuscleGroup: Record<string, number> = {};
+    sessions.forEach(session => {
+      if (session.statistics && session.statistics.setsByMuscleGroup) {
+        const rawSetsByMuscleGroup = session.statistics.setsByMuscleGroup instanceof Map
+          ? Object.fromEntries(session.statistics.setsByMuscleGroup)
+          : session.statistics.setsByMuscleGroup;
+        for (const [muscle, count] of Object.entries(rawSetsByMuscleGroup)) {
+          setsByMuscleGroup[muscle] = (setsByMuscleGroup[muscle] || 0) + Number(count);
+        }
+      }
+    });
+
+    return {
+      userId,
+      start: startDate.toISOString().slice(0, 10),
+      end: endDate.toISOString().slice(0, 10),
+      setsByMuscleGroup
+    };
+  }
+
   private mapToDomain(mongooseSession: any): ExerciseSession {
     return {
       id: mongooseSession._id.toString(),

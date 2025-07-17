@@ -220,4 +220,38 @@ export class ExerciseSessionController {
       });
     }
   }
+
+  // GET /api/v1/users/:userId/sessions/weekly-summary
+  async getWeeklyMuscleGroupSummary(req: Request, res: Response): Promise<void> {
+    try {
+      const { userId } = req.params;
+      const { startDate, endDate } = req.query;
+
+      if (!startDate || !endDate) {
+        res.status(400).json({
+          success: false,
+          error: 'Bad Request',
+          message: 'startDate and endDate query parameters are required'
+        });
+        return;
+      }
+
+      const summary = await this.exerciseSessionUseCases.getWeeklyMuscleGroupSummary(
+        userId,
+        new Date(startDate as string),
+        new Date(endDate as string)
+      );
+
+      res.status(200).json({
+        success: true,
+        data: summary
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
 } 

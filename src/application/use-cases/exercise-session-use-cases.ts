@@ -135,4 +135,8 @@ export class ExerciseSessionUseCases {
     const sessions = await this.exerciseSessionRepository.findByUserIdAndDateRange(userId, startDate, endDate);
     return ExerciseSessionMapper.toResponseDtoList(sessions);
   }
+
+  async getWeeklyMuscleGroupSummary(userId: string, startDate: Date, endDate: Date): Promise<any> {
+    return await this.exerciseSessionRepository.getWeeklyMuscleGroupSummary(userId, startDate, endDate);
+  }
 } 

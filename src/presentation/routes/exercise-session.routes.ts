@@ -19,12 +19,15 @@ const extractUserId = (req: any, _res: any, next: any) => {
 };
 
 // Rutas para sesiones de ejercicio del usuario
+
+router.get('/users/:userId/sessions/weekly-summary', extractUserId, exerciseSessionController.getWeeklyMuscleGroupSummary.bind(exerciseSessionController));
+router.get('/users/:userId/sessions/range', extractUserId, exerciseSessionController.getUserSessionsByDateRange.bind(exerciseSessionController));
+
 router.post('/users/:userId/sessions', extractUserId, exerciseSessionController.createExerciseSession.bind(exerciseSessionController));
 router.get('/users/:userId/sessions', extractUserId, exerciseSessionController.getUserExerciseSessions.bind(exerciseSessionController));
 router.get('/users/:userId/sessions/:id', extractUserId, exerciseSessionController.getExerciseSessionById.bind(exerciseSessionController));
 router.put('/users/:userId/sessions/:id', extractUserId, exerciseSessionController.updateExerciseSession.bind(exerciseSessionController));
 router.delete('/users/:userId/sessions/:id', extractUserId, exerciseSessionController.deleteExerciseSession.bind(exerciseSessionController));
 router.get('/users/:userId/sessions/stats', extractUserId, exerciseSessionController.getUserSessionStats.bind(exerciseSessionController));
-router.get('/users/:userId/sessions/range', extractUserId, exerciseSessionController.getUserSessionsByDateRange.bind(exerciseSessionController));
 
 export default router; 

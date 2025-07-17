@@ -18,4 +18,10 @@ export interface ExerciseSessionRepository {
     totalSets: number;
     mostUsedMuscleGroups: Array<{ muscleGroup: string; count: number }>;
   }>;
+  getWeeklyMuscleGroupSummary(userId: string, startDate: Date, endDate: Date): Promise<{
+    userId: string;
+    start: string;
+    end: string;
+    setsByMuscleGroup: Record<string, number>;
+  }>;
 } 
