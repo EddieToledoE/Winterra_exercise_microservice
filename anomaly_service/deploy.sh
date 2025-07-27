@@ -27,15 +27,15 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Función para verificar si Docker está instalado
+# Función para verificar si Docker y Docker Compose están disponibles
 check_docker() {
     if ! command -v docker &> /dev/null; then
         print_error "Docker no está instalado. Por favor instala Docker primero."
         exit 1
     fi
-    
-    if ! command -v docker-compose &> /dev/null; then
-        print_error "Docker Compose no está instalado. Por favor instala Docker Compose primero."
+
+    if ! docker compose version &> /dev/null; then
+        print_error "Docker Compose no está instalado o no es accesible. Por favor instala Docker Compose v2."
         exit 1
     fi
 }
@@ -43,14 +43,14 @@ check_docker() {
 # Función para construir la imagen
 build_image() {
     print_status "Construyendo imagen Docker..."
-    docker-compose build --no-cache
+    docker compose build --no-cache
     print_status "Imagen construida exitosamente"
 }
 
 # Función para iniciar el servicio
 start_service() {
     print_status "Iniciando servicio de detección de anomalías..."
-    docker-compose up -d
+    docker compose up -d
     print_status "Servicio iniciado en puerto 8001"
     print_status "Health check disponible en: http://localhost:8001/api/v1/anomaly/health"
 }
@@ -58,30 +58,30 @@ start_service() {
 # Función para detener el servicio
 stop_service() {
     print_status "Deteniendo servicio..."
-    docker-compose down
+    docker compose down
     print_status "Servicio detenido"
 }
 
 # Función para reiniciar el servicio
 restart_service() {
     print_status "Reiniciando servicio..."
-    docker-compose restart
+    docker compose restart
     print_status "Servicio reiniciado"
 }
 
 # Función para mostrar logs
 show_logs() {
     print_status "Mostrando logs del servicio..."
-    docker-compose logs -f
+    docker compose logs -f
 }
 
 # Función para verificar estado
 check_status() {
     print_status "Verificando estado del servicio..."
-    
+
     if docker ps | grep -q $CONTAINER_NAME; then
         print_status "✅ Servicio está ejecutándose"
-        
+
         # Verificar health check
         if curl -f http://localhost:8001/api/v1/anomaly/health &> /dev/null; then
             print_status "✅ Health check exitoso"
@@ -109,7 +109,7 @@ show_info() {
 # Función para limpiar recursos
 cleanup() {
     print_status "Limpiando recursos Docker..."
-    docker-compose down --volumes --remove-orphans
+    docker compose down --volumes --remove-orphans
     docker system prune -f
     print_status "Limpieza completada"
 }
@@ -174,4 +174,4 @@ case "${1:-help}" in
         show_help
         exit 1
         ;;
-esac 
+esac

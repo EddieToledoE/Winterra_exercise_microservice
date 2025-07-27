@@ -1,7 +1,7 @@
 ### API Tests para Servicio de Detección de Anomalías
 ### Ahora incluye clasificación de tipos de anomalía
 
-@baseUrl = http://localhost:8000
+@baseUrl = http://34.239.221.54:8001
 @contentType = application/json
 
 ### 1. Health Check
