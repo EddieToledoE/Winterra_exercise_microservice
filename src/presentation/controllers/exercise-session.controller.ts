@@ -254,4 +254,53 @@ export class ExerciseSessionController {
       });
     }
   }
+
+  // POST /api/v1/users/:userId/sessions/bulk-insert
+  async bulkInsertExerciseSessions(req: Request, res: Response): Promise<void> {
+    try {
+      const { userId } = req.params;
+      let sessions = req.body;
+      if (!Array.isArray(sessions)) {
+        res.status(400).json({ success: false, message: 'Body must be an array of sessions' });
+        return;
+      }
+      // Asegurar que cada sesión tenga el userId correcto
+      sessions = sessions.map((s) => ({ ...s, userId }));
+      // Usar el modelo directamente para insertMany
+      const { ExerciseSessionModel } = require('../../infrastructure/database/models/exercise-session.model');
+      const result = await ExerciseSessionModel.insertMany(sessions);
+      res.status(201).json({ success: true, inserted: result.length });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+
+  // GET /api/v1/sessions/all
+  async getAllExerciseSessions(req: Request, res: Response): Promise<void> {
+    try {
+      const page = parseInt((req.query.page as string) || '1');
+      const limit = parseInt((req.query.limit as string) || '100');
+      const skip = (page - 1) * limit;
+      const { ExerciseSessionModel } = require('../../infrastructure/database/models/exercise-session.model');
+      const total = await ExerciseSessionModel.countDocuments();
+      const sessions = await ExerciseSessionModel.find().skip(skip).limit(limit).lean();
+      res.status(200).json({
+        success: true,
+        data: sessions,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit)
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
 } 

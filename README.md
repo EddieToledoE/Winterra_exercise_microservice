@@ -35,6 +35,77 @@ Microservicio de ejercicios para Winterra con arquitectura DDD (Domain-Driven De
 - ✅ **Testing** - Jest para pruebas unitarias
 - ✅ **Error Handling** - Manejo centralizado de errores
 
+## 🧑‍💻 Estructura de Datos: Ejercicios y Sesiones (para ML)
+
+Esta sección describe cómo se almacenan los datos de sesiones y ejercicios en la base de datos. Es útil para el equipo de Machine Learning que desee analizar, detectar anomalías o hacer forecasting sobre los datos generados por los usuarios.
+
+### 📦 Ejercicio (`Exercise`)
+Cada ejercicio almacenado tiene la siguiente estructura:
+
+```json
+{
+  "id": "string",                // ID único del ejercicio
+  "name": "string",              // Nombre del ejercicio
+  "description": "string",       // Descripción (opcional)
+  "category": "string",          // Categoría (por ejemplo: STRENGTH, CARDIO, etc.)
+  "muscleGroups": ["string"],    // Grupos musculares involucrados
+  "difficulty": "string",        // Dificultad (BEGINNER, INTERMEDIATE, ADVANCED)
+  "equipment": ["string"],       // Equipamiento necesario (opcional)
+  "instructions": ["string"],    // Instrucciones paso a paso (opcional)
+  "createdAt": "ISODate",
+  "updatedAt": "ISODate"
+}
+```
+
+### 🏋️‍♂️ Sesión de Ejercicio (`ExerciseSession`)
+Cada sesión de entrenamiento de un usuario se almacena así:
+
+```json
+{
+  "id": "string",                // ID único de la sesión
+  "userId": "string",            // ID del usuario
+  "date": "ISODate",             // Fecha de la sesión
+  "startTime": "ISODate",        // Hora de inicio
+  "endTime": "ISODate",          // Hora de fin
+  "totalDuration": 3600,          // Duración total en segundos
+  "totalRestTime": 300,           // Tiempo total de descanso en segundos
+  "totalSets": 12,                // Total de sets realizados
+  "exercises": [                  // Lista de ejercicios realizados en la sesión
+    {
+      "id": "string",            // ID único del ejercicio en la sesión
+      "name": "string",          // Nombre del ejercicio
+      "muscleGroup": "string",   // Grupo muscular principal
+      "sets": [                   // Sets realizados para este ejercicio
+        {
+          "id": "string",        // ID único del set
+          "reps": 10,             // Repeticiones
+          "weight": 50,           // Peso en kg (opcional)
+          "restTime": 60,         // Descanso tras el set (segundos)
+          "completed": true       // Si el set fue completado
+        }
+      ],
+      "order": 1                  // Orden del ejercicio en la sesión
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": { "PECHO": 4, "ESPALDA": 8 }, // Sets por grupo muscular
+    "totalCompletedSets": 12,      // Sets completados
+    "totalRestTime": 300           // Descanso total en segundos
+  },
+  "notes": "string",              // Notas del usuario (opcional)
+  "createdAt": "ISODate",
+  "updatedAt": "ISODate"
+}
+```
+
+#### Notas importantes para ML:
+- Los campos de fecha y hora están en formato ISO 8601.
+- El campo `statistics` permite análisis agregados por grupo muscular y sets completados.
+- El campo `completed` en cada set indica si el usuario terminó ese set.
+- El campo `order` en cada ejercicio indica la secuencia dentro de la sesión.
+
+---
+
 ## 📋 Prerrequisitos
 
 - Node.js >= 18.0.0

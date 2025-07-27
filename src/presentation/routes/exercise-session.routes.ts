@@ -24,10 +24,12 @@ router.get('/users/:userId/sessions/weekly-summary', extractUserId, exerciseSess
 router.get('/users/:userId/sessions/range', extractUserId, exerciseSessionController.getUserSessionsByDateRange.bind(exerciseSessionController));
 
 router.post('/users/:userId/sessions', extractUserId, exerciseSessionController.createExerciseSession.bind(exerciseSessionController));
+router.post('/users/:userId/sessions/bulk-insert', exerciseSessionController.bulkInsertExerciseSessions.bind(exerciseSessionController));
 router.get('/users/:userId/sessions', extractUserId, exerciseSessionController.getUserExerciseSessions.bind(exerciseSessionController));
 router.get('/users/:userId/sessions/:id', extractUserId, exerciseSessionController.getExerciseSessionById.bind(exerciseSessionController));
 router.put('/users/:userId/sessions/:id', extractUserId, exerciseSessionController.updateExerciseSession.bind(exerciseSessionController));
 router.delete('/users/:userId/sessions/:id', extractUserId, exerciseSessionController.deleteExerciseSession.bind(exerciseSessionController));
 router.get('/users/:userId/sessions/stats', extractUserId, exerciseSessionController.getUserSessionStats.bind(exerciseSessionController));
+router.get('/sessions/all', exerciseSessionController.getAllExerciseSessions.bind(exerciseSessionController));
 
 export default router; 

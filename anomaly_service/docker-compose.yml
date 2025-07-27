@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  anomaly-detection:
+    build: .
+    container_name: anomaly-detection-api
+    ports:
+      - "8001:8000"  # Puerto 8001 en host, 8000 en contenedor
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./models:/app/models  # Montar modelos desde host
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/anomaly/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s 

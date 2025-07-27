@@ -1,0 +1,44 @@
+### PROBAR API
+POST http://localhost:3000/api/v1/users/YEMGG1WruaXs0n17A49Nwu8sl9M2/sessions
+Content-Type: application/json
+
+{
+  "userId": "FIREBASE_UID_AQUI",
+  "date": "2025-07-13T17:38:09.484290",
+  "startTime": "2025-07-13T17:39:29.494773",
+  "endTime": "2025-07-13T17:42:47.494773",
+  "totalDuration": 198,
+  "totalRestTime": 37,
+  "totalSets": 3,
+  "exercises": [
+    {
+      "name": "Remo con barra",
+      "muscleGroup": "Espalda",
+      "sets": [
+        {
+          "reps": 10,
+          "weight": 28.0,
+          "restTime": 3,
+          "completed": true
+        }
+      ]
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {
+      "Espalda": 3
+    },
+    "totalCompletedSets": 3,
+    "totalRestTime": 37
+  }
+}
+
+### RESUMEN SEMANAL DE SERIES POR GRUPO MUSCULAR
+GET http://34.239.221.54:3000/api/v1/users/YEMGG1WruaXs0n17A49Nwu8sl9M2/sessions/weekly-summary?startDate=2025-07-13&endDate=2025-07-19
+
+### SESIONES POR RANGO DE FECHAS (para calendario)
+GET http://34.239.221.54:3000/api/v1/users/YEMGG1WruaXs0n17A49Nwu8sl9M2/sessions/range?startDate=2025-07-13&endDate=2025-07-19
+
+### TODAS LAS SESIONES
+GET http://localhost:3000/api/v1/sessions/all?limit=1000
+

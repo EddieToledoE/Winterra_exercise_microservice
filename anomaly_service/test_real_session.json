@@ -1,0 +1,88 @@
+{
+  "userId": "user1",
+  "date": "2025-06-27T13:00:00.000Z",
+  "startTime": "2025-06-27T13:00:00.000Z",
+  "endTime": "2025-06-27T14:31:37.000Z",
+  "totalDuration": 5497,
+  "totalRestTime": 3849,
+  "totalSets": 17,
+  "exercises": [
+    {
+      "id": "574b8b0e-67f9-4e64-93d0-c100333c6368",
+      "name": "PRESS DE BANCA INCLINADA",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "d5daa53a-8f87-4de9-bc2e-62aab57ff978",
+          "reps": 11,
+          "weight": 30,
+          "restTime": 219,
+          "completed": true
+        },
+        {
+          "id": "0f42f4aa-ea8c-4c05-874b-7d847bc54f24",
+          "reps": 11,
+          "weight": 32.5,
+          "restTime": 229,
+          "completed": true
+        }
+      ],
+      "order": 1
+    },
+    {
+      "id": "f9d224bb-cc6b-46b2-9364-9f2ffdf83924",
+      "name": "PRESS MILITAR",
+      "muscleGroup": "HOMBRO",
+      "sets": [
+        {
+          "id": "59de6ef8-4983-49c9-a835-4eea2b7543f7",
+          "reps": 10,
+          "weight": 107.5,
+          "restTime": 227,
+          "completed": true
+        },
+        {
+          "id": "14eb6882-94d8-422d-a2bd-7555a94a9704",
+          "reps": 8,
+          "weight": 112.5,
+          "restTime": 230,
+          "completed": true
+        }
+      ],
+      "order": 2
+    },
+    {
+      "id": "260f723f-ca66-4cbd-a77e-c15a65392a8b",
+      "name": "PECK DECK",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "a56ad528-94f6-48e4-8bac-a4bd01110a55",
+          "reps": 11,
+          "weight": 75,
+          "restTime": 206,
+          "completed": true
+        },
+        {
+          "id": "e45f944c-8acd-4b8d-9dbd-b2ec025b85dd",
+          "reps": 9,
+          "weight": 77.5,
+          "restTime": 236,
+          "completed": true
+        }
+      ],
+      "order": 3
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {
+      "PECHO": 4,
+      "HOMBRO": 2
+    },
+    "totalCompletedSets": 6,
+    "totalRestTime": 3849
+  },
+  "notes": "",
+  "createdAt": "2025-06-27T14:31:37.000Z",
+  "updatedAt": "2025-06-27T14:31:37.000Z"
+} 

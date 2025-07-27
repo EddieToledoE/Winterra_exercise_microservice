@@ -1,0 +1,595 @@
+### API Tests para Servicio de Detección de Anomalías
+### Ahora incluye clasificación de tipos de anomalía
+
+@baseUrl = http://localhost:8000
+@contentType = application/json
+
+### 1. Health Check
+GET {{baseUrl}}/api/v1/anomaly/health
+
+### 2. Información del Servicio
+GET {{baseUrl}}/info
+
+### 3. Predicción con formato MongoDB Extended JSON
+POST {{baseUrl}}/api/v1/anomaly/predict
+Content-Type: {{contentType}}
+
+< ./test_session.json
+
+### 4. Predicción de sesión intensa (MongoDB format)
+POST {{baseUrl}}/api/v1/anomaly/predict
+Content-Type: {{contentType}}
+
+{
+  "_id": {"$oid": "6874ac9acce77ea8580e6158"},
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": {"$date": {"$numberLong": "1752455170842"}},
+  "startTime": {"$date": {"$numberLong": "1752455188213"}},
+  "endTime": {"$date": {"$numberLong": "1752455225797"}},
+  "totalDuration": {"$numberInt": "1800"},
+  "totalRestTime": {"$numberInt": "300"},
+  "totalSets": {"$numberInt": "8"},
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": {"$numberInt": "15"},
+          "weight": {"$numberInt": "150"},
+          "restTime": {"$numberInt": "45"},
+          "completed": true
+        },
+        {
+          "id": "e3f509ce-35a5-407e-a2e2-8590d2359c33",
+          "reps": {"$numberInt": "12"},
+          "weight": {"$numberInt": "160"},
+          "restTime": {"$numberInt": "60"},
+          "completed": true
+        }
+      ],
+      "order": {"$numberInt": "1"}
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {"PECHO": {"$numberInt": "2"}},
+    "totalCompletedSets": {"$numberInt": "2"},
+    "totalRestTime": {"$numberInt": "105"}
+  },
+  "createdAt": {"$date": {"$numberLong": "1752476826891"}},
+  "updatedAt": {"$date": {"$numberLong": "1752476826891"}},
+  "__v": {"$numberInt": "0"}
+}
+
+### 5. Test de extracción de características (MongoDB format)
+POST {{baseUrl}}/api/v1/anomaly/test-features
+Content-Type: {{contentType}}
+
+< ./test_session.json
+
+### 6. Predicción con múltiples grupos musculares (MongoDB format)
+POST {{baseUrl}}/api/v1/anomaly/predict
+Content-Type: {{contentType}}
+
+{
+  "_id": {"$oid": "6874ac9acce77ea8580e6158"},
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": {"$date": {"$numberLong": "1752455170842"}},
+  "startTime": {"$date": {"$numberLong": "1752455188213"}},
+  "endTime": {"$date": {"$numberLong": "1752455225797"}},
+  "totalDuration": {"$numberInt": "3600"},
+  "totalRestTime": {"$numberInt": "600"},
+  "totalSets": {"$numberInt": "12"},
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": {"$numberInt": "10"},
+          "weight": {"$numberInt": "100"},
+          "restTime": {"$numberInt": "90"},
+          "completed": true
+        }
+      ],
+      "order": {"$numberInt": "1"}
+    },
+    {
+      "id": "3f629g3d-2d78-578g-102e-5ce8f8b577e2",
+      "name": "Sentadillas",
+      "muscleGroup": "CUADRICEPS",
+      "sets": [
+        {
+          "id": "9f282cbf-5e62-592d-9bc7-351bface8b05",
+          "reps": {"$numberInt": "12"},
+          "weight": {"$numberInt": "120"},
+          "restTime": {"$numberInt": "120"},
+          "completed": true
+        }
+      ],
+      "order": {"$numberInt": "2"}
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {
+      "PECHO": {"$numberInt": "1"},
+      "CUADRICEPS": {"$numberInt": "1"}
+    },
+    "totalCompletedSets": {"$numberInt": "2"},
+    "totalRestTime": {"$numberInt": "210"}
+  },
+  "createdAt": {"$date": {"$numberLong": "1752476826891"}},
+  "updatedAt": {"$date": {"$numberLong": "1752476826891"}},
+  "__v": {"$numberInt": "0"}
+}
+
+### ===== NUEVOS ENDPOINTS PARA FORMATO JSON ESTÁNDAR =====
+
+### 7. Predicción con formato JSON estándar (como lo envía la app móvil)
+POST {{baseUrl}}/api/v1/anomaly/predict-real
+Content-Type: {{contentType}}
+
+< ./test_real_session.json
+
+### 8. Test de extracción de características (formato JSON estándar)
+POST {{baseUrl}}/api/v1/anomaly/test-features-real
+Content-Type: {{contentType}}
+
+< ./test_real_session.json
+
+### ===== CASOS DE PRUEBA PARA CADA TIPO DE ANOMALÍA =====
+
+### 9. CASO 1: Sesión muy corta (pocos sets + bajo rendimiento)
+POST {{baseUrl}}/api/v1/anomaly/predict-real
+Content-Type: {{contentType}}
+
+{
+  "_id": "6874ac9acce77ea8580e6158",
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": "2025-01-13T10:00:00.000Z",
+  "startTime": "2025-01-13T10:00:00.000Z",
+  "endTime": "2025-01-13T10:15:00.000Z",
+  "totalDuration": 900,
+  "totalRestTime": 300,
+  "totalSets": 2,
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": 8,
+          "weight": 50,
+          "restTime": 150,
+          "completed": true
+        },
+        {
+          "id": "e3f509ce-35a5-407e-a2e2-8590d2359c33",
+          "reps": 6,
+          "weight": 55,
+          "restTime": 150,
+          "completed": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {"PECHO": 2},
+    "totalCompletedSets": 2,
+    "totalRestTime": 300
+  },
+  "createdAt": "2025-01-13T10:00:00.000Z",
+  "updatedAt": "2025-01-13T10:15:00.000Z",
+  "__v": 0
+}
+
+### 10. CASO 2: Carga excesiva (alto rendimiento + pocas repeticiones)
+POST {{baseUrl}}/api/v1/anomaly/predict-real
+Content-Type: {{contentType}}
+
+{
+  "_id": "6874ac9acce77ea8580e6158",
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": "2025-01-13T10:00:00.000Z",
+  "startTime": "2025-01-13T10:00:00.000Z",
+  "endTime": "2025-01-13T11:00:00.000Z",
+  "totalDuration": 3600,
+  "totalRestTime": 1200,
+  "totalSets": 8,
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": 3,
+          "weight": 200,
+          "restTime": 180,
+          "completed": true
+        },
+        {
+          "id": "e3f509ce-35a5-407e-a2e2-8590d2359c33",
+          "reps": 2,
+          "weight": 220,
+          "restTime": 180,
+          "completed": true
+        },
+        {
+          "id": "f4g620df-6f6b-6f8h-113f-6df9g9c688f3",
+          "reps": 1,
+          "weight": 240,
+          "restTime": 180,
+          "completed": true
+        }
+      ],
+      "order": 1
+    },
+    {
+      "id": "3f629g3d-2d78-578g-102e-5ce8f8b577e2",
+      "name": "Sentadillas",
+      "muscleGroup": "CUADRICEPS",
+      "sets": [
+        {
+          "id": "9f282cbf-5e62-592d-9bc7-351bface8b05",
+          "reps": 4,
+          "weight": 300,
+          "restTime": 180,
+          "completed": true
+        },
+        {
+          "id": "0g393dcg-7f73-6f9i-124g-7eg0h0d799g4",
+          "reps": 3,
+          "weight": 320,
+          "restTime": 180,
+          "completed": true
+        },
+        {
+          "id": "1h404edh-8g84-7g0j-135h-8fh1i1e800h5",
+          "reps": 2,
+          "weight": 340,
+          "restTime": 180,
+          "completed": true
+        },
+        {
+          "id": "2i515fei-9h95-8h1k-146i-9gi2j2f911i6",
+          "reps": 1,
+          "weight": 360,
+          "restTime": 180,
+          "completed": true
+        },
+        {
+          "id": "3j626gfj-0i06-9i2l-157j-0hj3k3g022j7",
+          "reps": 1,
+          "weight": 380,
+          "restTime": 180,
+          "completed": true
+        }
+      ],
+      "order": 2
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {
+      "PECHO": 3,
+      "CUADRICEPS": 5
+    },
+    "totalCompletedSets": 8,
+    "totalRestTime": 1200
+  },
+  "createdAt": "2025-01-13T10:00:00.000Z",
+  "updatedAt": "2025-01-13T11:00:00.000Z",
+  "__v": 0
+}
+
+### 11. CASO 3: Descanso excesivo (más de 3 minutos entre sets)
+POST {{baseUrl}}/api/v1/anomaly/predict-real
+Content-Type: {{contentType}}
+
+{
+  "_id": "6874ac9acce77ea8580e6158",
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": "2025-01-13T10:00:00.000Z",
+  "startTime": "2025-01-13T10:00:00.000Z",
+  "endTime": "2025-01-13T11:30:00.000Z",
+  "totalDuration": 5400,
+  "totalRestTime": 3600,
+  "totalSets": 4,
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": 10,
+          "weight": 100,
+          "restTime": 900,
+          "completed": true
+        },
+        {
+          "id": "e3f509ce-35a5-407e-a2e2-8590d2359c33",
+          "reps": 8,
+          "weight": 110,
+          "restTime": 900,
+          "completed": true
+        },
+        {
+          "id": "f4g620df-6f6b-6f8h-113f-6df9g9c688f3",
+          "reps": 6,
+          "weight": 120,
+          "restTime": 900,
+          "completed": true
+        },
+        {
+          "id": "0g393dcg-7f73-6f9i-124g-7eg0h0d799g4",
+          "reps": 4,
+          "weight": 130,
+          "restTime": 900,
+          "completed": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {"PECHO": 4},
+    "totalCompletedSets": 4,
+    "totalRestTime": 3600
+  },
+  "createdAt": "2025-01-13T10:00:00.000Z",
+  "updatedAt": "2025-01-13T11:30:00.000Z",
+  "__v": 0
+}
+
+### 12. CASO 4: Pesos inestables (alta variabilidad en pesos)
+POST {{baseUrl}}/api/v1/anomaly/predict-real
+Content-Type: {{contentType}}
+
+{
+  "_id": "6874ac9acce77ea8580e6158",
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": "2025-01-13T10:00:00.000Z",
+  "startTime": "2025-01-13T10:00:00.000Z",
+  "endTime": "2025-01-13T10:45:00.000Z",
+  "totalDuration": 2700,
+  "totalRestTime": 900,
+  "totalSets": 6,
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": 10,
+          "weight": 80,
+          "restTime": 150,
+          "completed": true
+        },
+        {
+          "id": "e3f509ce-35a5-407e-a2e2-8590d2359c33",
+          "reps": 8,
+          "weight": 120,
+          "restTime": 150,
+          "completed": true
+        },
+        {
+          "id": "f4g620df-6f6b-6f8h-113f-6df9g9c688f3",
+          "reps": 6,
+          "weight": 60,
+          "restTime": 150,
+          "completed": true
+        },
+        {
+          "id": "0g393dcg-7f73-6f9i-124g-7eg0h0d799g4",
+          "reps": 12,
+          "weight": 140,
+          "restTime": 150,
+          "completed": true
+        },
+        {
+          "id": "1h404edh-8g84-7g0j-135h-8fh1i1e800h5",
+          "reps": 4,
+          "weight": 100,
+          "restTime": 150,
+          "completed": true
+        },
+        {
+          "id": "2i515fei-9h95-8h1k-146i-9gi2j2f911i6",
+          "reps": 8,
+          "weight": 90,
+          "restTime": 150,
+          "completed": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {"PECHO": 6},
+    "totalCompletedSets": 6,
+    "totalRestTime": 900
+  },
+  "createdAt": "2025-01-13T10:00:00.000Z",
+  "updatedAt": "2025-01-13T10:45:00.000Z",
+  "__v": 0
+}
+
+### 13. CASO 5: Sesión normal (para comparar)
+POST {{baseUrl}}/api/v1/anomaly/predict-real
+Content-Type: {{contentType}}
+
+{
+  "userId": "user1",
+  "date": "2025-06-27T13:00:00.000Z",
+  "startTime": "2025-06-27T13:00:00.000Z",
+  "endTime": "2025-06-27T14:31:37.000Z",
+  "totalDuration": 5497,
+  "totalRestTime": 3849,
+  "totalSets": 17,
+  "exercises": [
+    {
+      "id": "574b8b0e-67f9-4e64-93d0-c100333c6368",
+      "name": "PRESS DE BANCA INCLINADA",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "d5daa53a-8f87-4de9-bc2e-62aab57ff978",
+          "reps": 11,
+          "weight": 30,
+          "restTime": 219,
+          "completed": true
+        },
+        {
+          "id": "0f42f4aa-ea8c-4c05-874b-7d847bc54f24",
+          "reps": 11,
+          "weight": 32.5,
+          "restTime": 229,
+          "completed": true
+        }
+      ],
+      "order": 1
+    },
+    {
+      "id": "f9d224bb-cc6b-46b2-9364-9f2ffdf83924",
+      "name": "PRESS MILITAR",
+      "muscleGroup": "HOMBRO",
+      "sets": [
+        {
+          "id": "59de6ef8-4983-49c9-a835-4eea2b7543f7",
+          "reps": 10,
+          "weight": 107.5,
+          "restTime": 227,
+          "completed": true
+        },
+        {
+          "id": "14eb6882-94d8-422d-a2bd-7555a94a9704",
+          "reps": 8,
+          "weight": 112.5,
+          "restTime": 230,
+          "completed": true
+        }
+      ],
+      "order": 2
+    },
+    {
+      "id": "260f723f-ca66-4cbd-a77e-c15a65392a8b",
+      "name": "PECK DECK",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "a56ad528-94f6-48e4-8bac-a4bd01110a55",
+          "reps": 11,
+          "weight": 75,
+          "restTime": 206,
+          "completed": true
+        },
+        {
+          "id": "e45f944c-8acd-4b8d-9dbd-b2ec025b85dd",
+          "reps": 9,
+          "weight": 77.5,
+          "restTime": 236,
+          "completed": true
+        }
+      ],
+      "order": 3
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {
+      "PECHO": 4,
+      "HOMBRO": 2
+    },
+    "totalCompletedSets": 6,
+    "totalRestTime": 3849
+  },
+  "notes": "",
+  "createdAt": "2025-06-27T14:31:37.000Z",
+  "updatedAt": "2025-06-27T14:31:37.000Z"
+} 
+
+### 14. CASO 6: Desempeño irregular (anomalía no clasificada)
+POST {{baseUrl}}/api/v1/anomaly/predict-real
+Content-Type: {{contentType}}
+
+{
+  "_id": "6874ac9acce77ea8580e6158",
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": "2025-01-13T10:00:00.000Z",
+  "startTime": "2025-01-13T10:00:00.000Z",
+  "endTime": "2025-01-13T10:30:00.000Z",
+  "totalDuration": 1800,
+  "totalRestTime": 600,
+  "totalSets": 6,
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": 15,
+          "weight": 50,
+          "restTime": 100,
+          "completed": true
+        },
+        {
+          "id": "e3f509ce-35a5-407e-a2e2-8590d2359c33",
+          "reps": 20,
+          "weight": 45,
+          "restTime": 100,
+          "completed": true
+        },
+        {
+          "id": "f4g620df-6f6b-6f8h-113f-6df9g9c688f3",
+          "reps": 25,
+          "weight": 40,
+          "restTime": 100,
+          "completed": true
+        },
+        {
+          "id": "0g393dcg-7f73-6f9i-124g-7eg0h0d799g4",
+          "reps": 30,
+          "weight": 35,
+          "restTime": 100,
+          "completed": true
+        },
+        {
+          "id": "1h404edh-8g84-7g0j-135h-8fh1i1e800h5",
+          "reps": 35,
+          "weight": 30,
+          "restTime": 100,
+          "completed": true
+        },
+        {
+          "id": "2i515fei-9h95-8h1k-146i-9gi2j2f911i6",
+          "reps": 40,
+          "weight": 25,
+          "restTime": 100,
+          "completed": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {"PECHO": 6},
+    "totalCompletedSets": 6,
+    "totalRestTime": 600
+  },
+  "createdAt": "2025-01-13T10:00:00.000Z",
+  "updatedAt": "2025-01-13T10:30:00.000Z",
+  "__v": 0
+} 

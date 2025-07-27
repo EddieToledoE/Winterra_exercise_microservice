@@ -1,0 +1,42 @@
+{
+  "_id": {"$oid": "6874ac9acce77ea8580e6158"},
+  "userId": "YEMGG1WruaXs0n17A49Nwu8sl9M2",
+  "date": {"$date": {"$numberLong": "1752455170842"}},
+  "startTime": {"$date": {"$numberLong": "1752455188213"}},
+  "endTime": {"$date": {"$numberLong": "1752455225797"}},
+  "totalDuration": {"$numberInt": "37"},
+  "totalRestTime": {"$numberInt": "16"},
+  "totalSets": {"$numberInt": "2"},
+  "exercises": [
+    {
+      "id": "2e518f2c-1c67-467f-991d-4bd7e7a466e1",
+      "name": "Press de banca",
+      "muscleGroup": "PECHO",
+      "sets": [
+        {
+          "id": "8e171bae-4d51-481c-8ab6-240aface7a94",
+          "reps": {"$numberInt": "12"},
+          "weight": {"$numberInt": "25"},
+          "restTime": {"$numberInt": "13"},
+          "completed": true
+        },
+        {
+          "id": "e3f509ce-35a5-407e-a2e2-8590d2359c33",
+          "reps": {"$numberInt": "10"},
+          "weight": {"$numberInt": "30"},
+          "restTime": {"$numberInt": "3"},
+          "completed": true
+        }
+      ],
+      "order": {"$numberInt": "1"}
+    }
+  ],
+  "statistics": {
+    "setsByMuscleGroup": {"PECHO": {"$numberInt": "2"}},
+    "totalCompletedSets": {"$numberInt": "2"},
+    "totalRestTime": {"$numberInt": "16"}
+  },
+  "createdAt": {"$date": {"$numberLong": "1752476826891"}},
+  "updatedAt": {"$date": {"$numberLong": "1752476826891"}},
+  "__v": {"$numberInt": "0"}
+} 

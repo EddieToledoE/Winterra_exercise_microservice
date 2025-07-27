@@ -1,0 +1,47 @@
+# Archivos de desarrollo
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Archivos de documentación
+README.md
+*.md
+
+# Archivos de testing HTTP
+api_tests.http
+test_api.sh
+
+# Notebooks
+*.ipynb
+
+# Archivos de datos grandes
+sessions_all.json 
